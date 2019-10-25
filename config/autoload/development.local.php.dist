@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 use Zend\Expressive\Container;
 use Zend\Expressive\Middleware\ErrorResponseGenerator;
+use App\Application\Service\HomeService;
+use App\Infrastructure\Container\Application\Factory\HomeServiceFactory as HomeServiceFactory;
 
 return [
     'dependencies' => [
@@ -20,6 +22,7 @@ return [
         ],
         'factories'  => [
             ErrorResponseGenerator::class       => Container\WhoopsErrorResponseGeneratorFactory::class,
+            HomeService::class                  => HomeServiceFactory::class,
             'Zend\Expressive\Whoops'            => Container\WhoopsFactory::class,
             'Zend\Expressive\WhoopsPageHandler' => Container\WhoopsPageHandlerFactory::class,
         ],

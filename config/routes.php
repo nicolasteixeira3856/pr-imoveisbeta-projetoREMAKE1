@@ -1,12 +1,16 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
 use Zend\Expressive\MiddlewareFactory;
 
 /**
+ * @param Application $app
+ * @param MiddlewareFactory $factory
+ * @param ContainerInterface $container
+ *
  * Setup routes with a single request method:
  *
  * $app->get('/', App\Handler\HomePageHandler::class, 'home');
@@ -18,6 +22,21 @@ use Zend\Expressive\MiddlewareFactory;
  * Or with multiple request methods:
  *
  * $app->route('/contact', App\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
+ *
+ * Or handling all request methods:
+ *
+ * $app->route('/contact', App\Handler\ContactHandler::class)->setName('contact');
+ *
+ * or:
+ *
+ * $app->route(
+ *     '/contact',
+ *     App\Handler\ContactHandler::class,
+ *     Zend\Expressive\Router\Route::HTTP_METHOD_ANY,
+ *     'contact'
+ * );
+ *
  */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+    $app->get('/', \App\Http\Action\HomeAction::class, 'home');
 };
