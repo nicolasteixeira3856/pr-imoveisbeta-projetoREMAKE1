@@ -1,150 +1,128 @@
-# Expressive Skeleton and Installer
+## Objetivo geral:
+* Desenvolver um sistema web para uma imobiliária usando as linguagens:
 
-[![Build Status](https://secure.travis-ci.org/zendframework/zend-expressive-skeleton.svg?branch=master)](https://secure.travis-ci.org/zendframework/zend-expressive-skeleton)
-[![Coverage Status](https://coveralls.io/repos/github/zendframework/zend-expressive-skeleton/badge.svg?branch=master)](https://coveralls.io/github/zendframework/zend-expressive-skeleton?branch=master)
+    * PHP estruturado e O.O;
+    * HTML 5;
+    * CSS;
+    * JQuery;
+    * Javascript;
+    * SQL (CRUD).
 
-*Begin developing PSR-15 middleware applications in seconds!*
+* Funcionalidades do site:
 
-[zend-expressive](https://github.com/zendframework/zend-expressive) builds on
-[zend-stratigility](https://github.com/zendframework/zend-stratigility) to
-provide a minimalist PSR-15 middleware framework for PHP with routing, DI
-container, optional templating, and optional error handling capabilities.
+    * Criação do logotipo é de responsabilidade de cada equipe;
+    * Layout deve ser clean, com navegabilidade e usabilidade profissional;
+    * Aplicação de responsividade;
+    * Tela de login com recurso de Esqueci minha Senha e com 3 perfis de acesso: usuário
+    (Administrador, Corretor e Cliente);
+    * Senha com mínimo 7 e máximo 10 caracteres alfanuméricos;
+    * Aplicação de certificado de segurança. Escolher um certificado gratuito;
+    * Aplicação de criptografia;
+    * Uso de ícones profissionais relacionados a cada funcionalidade;
+    * A paginação deve ser limitada a 12 fotos por página;
+    * Mostrar os imóveis por região mostrando os preços dos imóveis no formato de pin no mapa,
+    para facilitar ao usuário clicar nos imóveis e verificar os preços que estão dentro do seu
+    orçamento;
+    * Nas operações relacionadas aos imóveis para venda e locação (cadastro, atualização e deleção
+    de dados), é obrigatória a mensagem de confirmação antes da efetivação da operação;
+    * Recurso de recuperação de dados durante o preenchimento nos forms;
+    * As informações devem ser autênticas e de cunho fictício. PROIBIDO INSERIR: nomes como
+    teste, telefone: 12345678, cidades não associadas à respectiva unidade federativa, etc..;
+    * Obrigatória organização de pastas na estruturação do projeto;
+    * O sistema web deve estar hospedado no hostinger (hospedagem gratuita) com domínio
+    relacionado a imoveisbeta.
+        
+## Arquitetura do sistema:
 
-This installer will setup a skeleton application based on zend-expressive by
-choosing optional packages based on user input as demonstrated in the following
-screenshot:
+#### Estrutura básica de um Bounded Context do sistema:
 
-![screenshot-installer](https://cloud.githubusercontent.com/assets/459648/10410494/16bdc674-6f6d-11e5-8190-3c1466e93361.png)
+Podem ser sistemas totalmente distintos mas no nosso caso serão a separação de contextos na mesma aplicação, isso facilitará a migração para outros modelos como SOA e Microsserviços quando houver necessidade. Segue Definição, para mais referências sobre assunto ler livros de DDD do Eric Evans e Vaughn Vernon: https://martinfowler.com/bliki/BoundedContext.html*
 
-The user selected packages are saved into `composer.json` so that everyone else
-working on the project have the same packages installed. Configuration files and
-templates are prepared for first use. The installer command is removed from
-`composer.json` after setup succeeded, and all installer related files are
-removed.
-
-## Getting Started
-
-Start your new Expressive project with composer:
-
-```bash
-$ composer create-project zendframework/zend-expressive-skeleton <project-path>
+```
+├── App
+    │   ├── Application
+    │   │   ├── Command
+    │   │   │   └── Email.php
+    │   │   └── Handler
+    │   │       └── EmailCommandHandler.php
+    │   ├── Domain
+    │   │   ├── Entity
+    │   │   │   └── Email.php
+    │   │   ├── Event
+    │   │   │   └── EmailSent.php
+    │   │   ├── Repository
+    │   │   │   └── EmailRepositoryInterface.php
+    │   │   └── Exception
+    │   │       └── EmailDomainException.php
+    │   │ 
+    │   └── Infrastructure
+    │       ├── Persistence
+    │       │   ├── Doctrine
+    │       │   │   ├── ORM
+    │       │   │   │   └── App.Domain.Entity.Repurchase.dcm.yml 
+    │       │   │   ├── Repository  
+    │       │   │   │   └── DoctrineEmailRepository.php
+    │       │   │   │       
+    │       │   │   │ 
 ```
 
-After choosing and installing the packages you want, go to the
-`<project-path>` and start PHP's built-in web server to verify installation:
+- **App > Application > Command** - Ficam os Use Cases ou em outras palavras, mensagens que determinam uma intenção de um usuário, bot, fila, ou terminal. Devem ser capturados nas reuniões com a equipe de negócio.
+- **App > Application > Handler** - Ficam os *Command handlers* trabalham como uma camada de serviço no padrão MVCS, podem tanto tratar um command quanto vários do mesmo contexto.
+- **App > Domain > Entity** - Model - Agregates (Entidades Raiz, geralmente os UseCases dizem respeito a ela) e entities e Value Object.
+- **App > Domain > Event** - Todos os eventos que ocorrem nesse contexto, são produzidos pelas Agregados ou Entidades.
+- **App > Domain > Repository** - Interfaces que representam como devem ser os Repositories desse contexto, a camada de infraestrutura implementa eles para fornecedor a classe concreta faz as requisições para serviços de apoio tais como: Banco de Dados, APIs.
+- **App > Infrastruture** - É um módulo de algum framework, nesse caso ZF3, nessa camada não há necessidade de ter controllers ou views, somente as implementações de Repositories, Comunicação com serviços externos, apis de terceiros, sistemas de mensageria, etc.
 
-```bash
-$ composer run --timeout=0 serve
-```
+#### Práticas e Frameworks
 
-You can then browse to http://localhost:8080.
+ - 12FactorApp - https://12factor.net/pt_br/
+ - Zend Expressive 3
+ - DDD - Domain Driven Design
+   * Referências:
+     * Eric Evans https://domainlanguage.com/
+     * Vaughn Vernon https://vaughnvernon.co/
+     * Martin Fowler https://martinfowler.com/
+    
+ - BDD e TDD - Behavior Driven Development e Test Driven Development
+    * Behat
+    * PhpUnit    
+    
+ - SOLID
+ - PSR2
+ - Object Calisthenics
+ - Design Patterns
+ - Zend Framework 3 para camada de Infraestrutura e Apresentação
+ 
+ 
+#### Padrões Arquiteturais
 
-> ### Linux users
->
-> On PHP versions prior to 7.1.14 and 7.2.2, this command might not work as
-> expected due to a bug in PHP that only affects linux environments. In such
-> scenarios, you will need to start the [built-in web
-> server](http://php.net/manual/en/features.commandline.webserver.php) yourself,
-> using the following command:
->
-> ```bash
-> $ php -S 0.0.0.0:8080 -t public/ public/index.php
-> ```
+ - Hexagonal Arquitecture
+   * Também conhecida como Ports/Adapters ou Onion Arquicteture. É uma padrão de arquitetura que consiste em isolar as camadas de níveis mais baixas das camadas de níveis mais altas.
+    O Core deve ser totalmente agnóstico de framework, apresentação ou serviços de infraestrutura como Banco de Dadosm, Serviços de Mensageria, etc...
+   * A Camada de Domínio deve trabalhar apenas objetos em memória, ela tem a responsabilidade de definir as entidades que deverão ser implementadas na camada de infraestrutura.
+   
+ - CQRS - https://martinfowler.com/bliki/CQRS.html, http://www.eduardopires.net.br/2016/07/cqrs-o-que-e-onde-aplicar/, http://cqrs.nu/
+    * Toda aplicação segue um fluxo para alteração de estado e outro para leitura
+    * Dentro da pasta Application deve conter a pasta Command e a pasta Handler
+      * Commands devem mostrar a intenção do usuário (Web, Cli, API, Mensageria)
+      * CommandHandlers são a nossa camada de serviço, ela possui métodos para receber os commandos no seguinte padrão: 
+        ```php 
+        // Para facilitar o desenvolvimento, vamos utilizar uma solução open-source para auxiliar a implementação de padrão
+        // A princípio foi escolhida a biblioteca Broadway https://github.com/broadway. Ela possui tanto recursos para CQRS quanto para EventSource
+        // Sendo assim o métodos para executar os commands seguem a seguinte convenção:   
+            
+            class TrackingCommandHandler  
+            {
+                public function handleTrackingCommand(TrackingCommand $command) ...
+            }
+        ```
+        
+ - Domain Event
+   * Cada entidade deve ser responsável por lançar eventos de alterações relevantes de estado na aplicação
+   
+Tirando isso você pode desenvolver da forma que preferir :)
 
-> ### Setting a timeout
->
-> Composer commands time out after 300 seconds (5 minutes). On Linux-based
-> systems, the `php -S` command that `composer serve` spawns continues running
-> as a background process, but on other systems halts when the timeout occurs.
->
-> As such, we recommend running the `serve` script using a timeout. This can
-> be done by using `composer run` to execute the `serve` script, with a
-> `--timeout` option. When set to `0`, as in the previous example, no timeout
-> will be used, and it will run until you cancel the process (usually via
-> `Ctrl-C`). Alternately, you can specify a finite timeout; as an example,
-> the following will extend the timeout to a full day:
->
-> ```bash
-> $ composer run --timeout=86400 serve
-> ```
+#### Contribuidores
 
-## Troubleshooting
-
-If the installer fails during the ``composer create-project`` phase, please go
-through the following list before opening a new issue. Most issues we have seen
-so far can be solved by `self-update` and `clear-cache`.
-
-1. Be sure to work with the latest version of composer by running `composer self-update`.
-2. Try clearing Composer's cache by running `composer clear-cache`.
-
-If neither of the above help, you might face more serious issues:
-
-- Info about the [zlib_decode error](https://github.com/composer/composer/issues/4121).
-- Info and solutions for [composer degraded mode](https://getcomposer.org/doc/articles/troubleshooting.md#degraded-mode).
-
-## Application Development Mode Tool
-
-This skeleton comes with [zf-development-mode](https://github.com/zfcampus/zf-development-mode). 
-It provides a composer script to allow you to enable and disable development mode.
-
-### To enable development mode
-
-**Note:** Do NOT run development mode on your production server!
-
-```bash
-$ composer development-enable
-```
-
-**Note:** Enabling development mode will also clear your configuration cache, to 
-allow safely updating dependencies and ensuring any new configuration is picked 
-up by your application.
-
-### To disable development mode
-
-```bash
-$ composer development-disable
-```
-
-### Development mode status
-
-```bash
-$ composer development-status
-```
-
-## Configuration caching
-
-By default, the skeleton will create a configuration cache in
-`data/config-cache.php`. When in development mode, the configuration cache is
-disabled, and switching in and out of development mode will remove the
-configuration cache.
-
-You may need to clear the configuration cache in production when deploying if
-you deploy to the same directory. You may do so using the following:
-
-```bash
-$ composer clear-config-cache
-```
-
-You may also change the location of the configuration cache itself by editing
-the `config/config.php` file and changing the `config_cache_path` entry of the
-local `$cacheConfig` variable.
-
-## Skeleton Development
-
-This section applies only if you cloned this repo with `git clone`, not when you
-installed expressive with `composer create-project ...`.
-
-If you want to run tests against the installer, you need to clone this repo and
-setup all dependencies with composer.  Make sure you **prevent composer running
-scripts** with `--no-scripts`, otherwise it will remove the installer and all
-tests.
-
-```bash
-$ composer update --no-scripts
-$ composer test
-```
-
-Please note that the installer tests remove installed config files and templates
-before and after running the tests.
-
-Before contributing read [the contributing guide](docs/CONTRIBUTING.md).
+- Ricardo Marangoni da Mota
+- Ronie Neubauer
