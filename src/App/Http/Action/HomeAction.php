@@ -11,6 +11,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 
+
 class HomeAction implements RequestHandlerInterface
 {
     /**
@@ -31,6 +32,7 @@ class HomeAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        return new HtmlResponse($this->template->render('app:home'));
+        $this->template->addPath('src/App/Application/Templates/app');
+        return new HtmlResponse($this->template->render('home.html.twig'));
     }
 }
