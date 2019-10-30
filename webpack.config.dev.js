@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const config = {
     mode: 'development',
@@ -11,6 +12,7 @@ const config = {
     },
     entry: {
         global: './src/App/Client/assets/global/js/global/global.js',
+        home: './src/App/Client/pages/Home/Home',
     },
     output: {
         path: path.resolve("./public/dist/vendor/"),
@@ -19,18 +21,52 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.s[ac]ss$/i,
+                test   : /\.(scss|css)$/,
+                resolve: {extensions: [".scss", ".css"],},
                 use: [
-                    // Creates `style` nodes from JS strings
                     'style-loader',
-                    // Translates CSS into CommonJS
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
-                    // Compiles Sass to CSS
-                    'sass-loader',
+                    'postcss-loader?sourceMap',
+                    'resolve-url-loader?sourceMap',
+                    'sass-loader?sourceMap',
+                ],
+            },
+            {
+                test: /\.vue$/,
+                loader: [
+                    {
+                        loader: 'vue-loader',
+                        options: {
+                            loaders: {
+                                scss: ['vue-style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader', 'postcss-loader'],
+                                css: ['vue-style-loader', MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+                            },
+                        },
+                    },
                 ],
             },
         ],
     },
+    resolve: {
+        extensions: ['.js', '.vue'],
+        alias: {
+            vue$: 'vue/dist/vue.js',
+        },
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: 'css/[name].css',
+            chunkFilename: '[id].css',
+            ignoreOrder: false,
+        }),
+        new webpack.ProvidePlugin({
+            Vue: 'vue',
+            BootstrapVue: 'bootstrap-vue',
+            axios: 'axios',
+        }),
+        new VueLoaderPlugin(),
+    ]
 };
 
 module.exports = config;

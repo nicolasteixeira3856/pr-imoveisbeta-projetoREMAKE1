@@ -2,8 +2,17 @@
 
 {% block title %}Home{% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="{{ asset('dist/vendor/css') }}/home.css" />
+{% endblock %}
+
 {% block content %}
 
-    <p>Hello World</p>
+    <div id="vue-content-home">
+    </div>
 
+{% endblock %}
+
+{% block footer_scripts %}
+    <script src="{{ asset('dist/vendor/js') }}/home.js"></script>
 {% endblock %}
