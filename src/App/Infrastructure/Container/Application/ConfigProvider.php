@@ -41,9 +41,11 @@ class ConfigProvider
             'factories' => [
                 // Actions - General
                 Action\HomeAction::class => new Factory\Action\TemplateActionFactory(Service\HomeService::class),
+                Action\User\UserAction::class => new Factory\Action\TemplateMethodsActionFactory(Service\UserService::class),
 
                 //Services
-                Service\HomeService::class => Factory\HomeServiceFactory::class,
+                Service\HomeService::class  => Factory\HomeServiceFactory::class,
+                Service\UserService::class => Factory\UserServiceFactory::class,
             ],
         ];
     }

@@ -13,6 +13,7 @@ const config = {
     entry: {
         global: './src/App/Client/assets/global/js/global/global.js',
         home: './src/App/Client/pages/Home/Home',
+        loginregister: './src/App/Client/pages/LoginRegister/LoginRegister',
     },
     output: {
         path: path.resolve("./public/dist/vendor/"),

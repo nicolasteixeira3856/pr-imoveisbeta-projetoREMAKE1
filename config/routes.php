@@ -38,5 +38,12 @@ use Zend\Expressive\MiddlewareFactory;
  *
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $app->get('/', \App\Http\Action\HomeAction::class, 'home');
+    $app->route('/', [
+        \App\Http\Action\HomeAction::class
+    ], ['GET'], 'home');
+
+    /** Users - MVC Pattern **/
+    $app->route('/usuario[/{function}[/{id:\d+}]]', [
+        \App\Http\Action\User\UserAction::class,
+    ], ['GET', 'POST', 'DELETE'], 'user.list');
 };

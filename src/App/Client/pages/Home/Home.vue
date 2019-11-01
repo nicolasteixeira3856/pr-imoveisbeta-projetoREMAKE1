@@ -22,11 +22,6 @@
                 <Card></Card>
             </b-col>
         </b-row>
-        <b-row>
-            <b-col lg="12">
-                <Cadastro></Cadastro>
-            </b-col>
-        </b-row>
     </div>
 </template>
 
@@ -39,8 +34,7 @@
         name: "Home",
         components: {
             Carousel,
-            Card,
-            Cadastro
+            Card
         }
     }
 </script>
